@@ -7,7 +7,8 @@
     ".claude/scripts"
   ],
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "platform:dev": "bun run platform/server.ts"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.3",

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spawn Operator Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar card">
+        <p class="eyebrow">Spawn Operator Console</p>
+        <h1>Launch and preview real Spawn workflows from the browser.</h1>
+        <p class="muted">
+          This frontend is connected to the repository manifest and CLI, so it can preview live `spawn --dry-run` output and
+          submit real headless launches when credentials are configured.
+        </p>
+
+        <div class="sidebar-block">
+          <h2>Why this wrapper matters</h2>
+          <ul>
+            <li>Give non-terminal operators a buyer-ready control plane.</li>
+            <li>Turn Spawn into a platform surface for demos, onboarding, and governed launches.</li>
+            <li>Connect product UX directly to the existing agent × cloud matrix.</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-block metrics" id="metric-cards"></div>
+      </aside>
+
+      <main class="main-panel">
+        <section class="card control-panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Connected launcher</p>
+              <h2>Configure a workspace</h2>
+            </div>
+            <span class="status-badge" id="connection-status">Loading manifest…</span>
+          </div>
+
+          <form id="launch-form" class="form-grid">
+            <label>
+              Agent
+              <select id="agent-select" name="agent"></select>
+            </label>
+            <label>
+              Cloud
+              <select id="cloud-select" name="cloud"></select>
+            </label>
+            <label>
+              Model override
+              <input id="model-input" name="model" type="text" placeholder="openai/gpt-5.3-codex" />
+            </label>
+            <label>
+              Execution mode
+              <select id="mode-select" name="mode">
+                <option value="preview">Preview only (`spawn --dry-run`)</option>
+                <option value="launch">Launch headless (`spawn --output json`)</option>
+              </select>
+            </label>
+            <label class="full-width">
+              Prompt
+              <textarea id="prompt-input" name="prompt" rows="5" placeholder="Ship the highest-priority fixes for the next release."></textarea>
+            </label>
+          </form>
+
+          <div class="card inset-card">
+            <div class="section-header compact">
+              <h3>Launch context</h3>
+              <span class="small-label" id="agent-runtime"></span>
+            </div>
+            <div class="launch-context">
+              <div>
+                <span>Tagline</span>
+                <strong id="agent-tagline"></strong>
+              </div>
+              <div>
+                <span>Cloud thesis</span>
+                <strong id="cloud-thesis"></strong>
+              </div>
+              <div>
+                <span>Required auth</span>
+                <strong id="cloud-auth"></strong>
+              </div>
+            </div>
+            <div class="pill-row" id="agent-tags"></div>
+          </div>
+
+          <div class="actions">
+            <button id="run-button" class="button primary" type="button">Run from browser</button>
+            <button id="reset-button" class="button secondary" type="button">Reset</button>
+          </div>
+        </section>
+
+        <section class="grid two-up">
+          <article class="card">
+            <div class="section-header compact">
+              <h3>Resolved Spawn command</h3>
+              <span class="small-label">Generated from your selections</span>
+            </div>
+            <pre id="command-preview"></pre>
+          </article>
+
+          <article class="card">
+            <div class="section-header compact">
+              <h3>Available coverage</h3>
+              <span class="small-label">Live from manifest.json</span>
+            </div>
+            <div class="coverage-stats" id="coverage-stats"></div>
+          </article>
+        </section>
+
+        <section class="grid two-up outputs">
+          <article class="card output-card">
+            <div class="section-header compact">
+              <h3>CLI stderr / operator log</h3>
+              <span class="small-label">Streaming summary after each run</span>
+            </div>
+            <pre id="stderr-output">No runs yet.</pre>
+          </article>
+
+          <article class="card output-card">
+            <div class="section-header compact">
+              <h3>CLI stdout / result payload</h3>
+              <span class="small-label">Dry-run output or headless JSON</span>
+            </div>
+            <pre id="stdout-output">No runs yet.</pre>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

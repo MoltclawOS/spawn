@@ -187,6 +187,22 @@ Get your OpenRouter API key at: https://openrouter.ai/settings/keys
 
 For cloud-specific auth, see each cloud's README in this repository.
 
+## Spawn Operator Console
+
+This repo now includes a browser-based frontend wrapper in [`platform/`](platform/README.md) that is connected to Spawn's real manifest and CLI:
+
+- Loads supported agents and clouds directly from `manifest.json`
+- Restricts selections to implemented agent × cloud pairs
+- Runs real local previews via `spawn --dry-run`
+- Can submit headless launches via `spawn --output json` when credentials are configured
+
+Run it locally with:
+
+```bash
+bun run platform/server.ts
+# open http://localhost:4173
+```
+
 ## Troubleshooting
 
 ### Installation issues
