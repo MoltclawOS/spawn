@@ -203,6 +203,20 @@ bun run platform/server.ts
 # open http://localhost:4173
 ```
 
+## Docker + Sprite One-Click Stack
+
+This repo now includes a full-stack Sprite deployment bundle for the Spawn Operator Console frontend, OpenClaw, Paperclip AI, and MoltClaw in [`docker/moltclaw-stack/`](docker/moltclaw-stack/README.md) with a one-click installer at [`sh/sprite/moltclaw-stack.sh`](sh/sprite/moltclaw-stack.sh).
+
+```bash
+OPENROUTER_API_KEY=sk-or-v1-xxxxx \
+GHL_API_KEY=xxxxx \
+GHL_LOCATION_ID=xxxxx \
+SPRITE_NAME=moltclaw-stack \
+  bash sh/sprite/moltclaw-stack.sh
+```
+
+The script validates Sprite auth, creates or reuses a Sprite VM, installs Docker + Compose, uploads the stack bundle, and boots the whole deployment.
+
 ## Troubleshooting
 
 ### Installation issues

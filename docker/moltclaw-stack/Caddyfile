@@ -1,0 +1,27 @@
+{
+  auto_https disable_redirects
+}
+
+{$STACK_DOMAIN} {
+  encode zstd gzip
+
+  handle_path /openclaw/* {
+    reverse_proxy {$OPENCLAW_UPSTREAM}
+  }
+
+  handle_path /paperclip/* {
+    reverse_proxy {$PAPERCLIP_UPSTREAM}
+  }
+
+  handle_path /moltclaw/* {
+    reverse_proxy {$MOLTCLAW_UPSTREAM}
+  }
+
+  handle_path /api/* {
+    reverse_proxy {$FRONTEND_UPSTREAM}
+  }
+
+  handle {
+    reverse_proxy {$FRONTEND_UPSTREAM}
+  }
+}
