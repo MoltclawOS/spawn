@@ -1,0 +1,85 @@
+name: moltclaw-stack
+
+services:
+  caddy:
+    image: caddy:2.9-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      STACK_DOMAIN: ${STACK_DOMAIN:-localhost}
+      FRONTEND_UPSTREAM: operator-console:4173
+      OPENCLAW_UPSTREAM: openclaw:3000
+      PAPERCLIP_UPSTREAM: paperclip:8000
+      MOLTCLAW_UPSTREAM: moltclaw:8080
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - operator-console
+      - openclaw
+      - paperclip
+      - moltclaw
+
+  operator-console:
+    build:
+      context: ./repo
+      dockerfile: platform/Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: 4173
+      SPAWN_NO_UPDATE_CHECK: "1"
+    volumes:
+      - ./repo:/app
+      - bun_cache:/root/.bun/install/cache
+
+  openclaw:
+    image: ${OPENCLAW_IMAGE:-ghcr.io/openclaw/openclaw:latest}
+    restart: unless-stopped
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      ANTHROPIC_API_KEY: ${OPENROUTER_API_KEY}
+      ANTHROPIC_BASE_URL: https://openrouter.ai/api
+      OPENCLAW_MODEL: ${OPENCLAW_MODEL:-openrouter/auto}
+    command: ${OPENCLAW_COMMAND:-openclaw gateway}
+    volumes:
+      - openclaw_data:/data
+
+  paperclip:
+    image: ${PAPERCLIP_IMAGE:-ghcr.io/paperclipai/paperclip:latest}
+    restart: unless-stopped
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      PAPERCLIP_MODEL: ${PAPERCLIP_MODEL:-openrouter/auto}
+      PAPERCLIP_PUBLIC_URL: ${PAPERCLIP_PUBLIC_URL:-https://${STACK_DOMAIN:-localhost}/paperclip}
+    command: ${PAPERCLIP_COMMAND:-server}
+    volumes:
+      - paperclip_data:/data
+
+  moltclaw:
+    image: ${MOLTCLAW_IMAGE:-ghcr.io/moltclawos/moltclaw:latest}
+    restart: unless-stopped
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      GHL_API_KEY: ${GHL_API_KEY}
+      GHL_LOCATION_ID: ${GHL_LOCATION_ID}
+      GHL_AGENCY_ID: ${GHL_AGENCY_ID:-}
+      MOLTCLAW_PUBLIC_URL: ${MOLTCLAW_PUBLIC_URL:-https://${STACK_DOMAIN:-localhost}/moltclaw}
+      OPENCLAW_BASE_URL: ${OPENCLAW_BASE_URL:-http://openclaw:3000}
+      PAPERCLIP_BASE_URL: ${PAPERCLIP_BASE_URL:-http://paperclip:8000}
+    command: ${MOLTCLAW_COMMAND:-start}
+    depends_on:
+      - openclaw
+      - paperclip
+    volumes:
+      - moltclaw_data:/data
+
+volumes:
+  bun_cache:
+  caddy_config:
+  caddy_data:
+  moltclaw_data:
+  openclaw_data:
+  paperclip_data:

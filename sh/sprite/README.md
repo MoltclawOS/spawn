@@ -52,6 +52,18 @@ bash <(curl -fsSL https://openrouter.ai/labs/spawn/sprite/hermes.sh)
 bash <(curl -fsSL https://openrouter.ai/labs/spawn/sprite/junie.sh)
 ```
 
+#### MoltClaw Stack
+
+```bash
+OPENROUTER_API_KEY=sk-or-v1-xxxxx \
+GHL_API_KEY=xxxxx \
+GHL_LOCATION_ID=xxxxx \
+SPRITE_NAME=moltclaw-stack \
+  bash sh/sprite/moltclaw-stack.sh
+```
+
+Deploys the Spawn Operator Console frontend, OpenClaw, Paperclip AI, and MoltClaw to a Sprite VM using Docker Compose.
+
 ## Non-Interactive Mode
 
 ```bash
